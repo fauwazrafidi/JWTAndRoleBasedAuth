@@ -1,0 +1,138 @@
+﻿@page "/administration/account/identity/users"
+@using Application.DTOs.Response.Account
+@using Microsoft.AspNetCore.Authorization
+@using NetcodeHub.Packages.Components
+@using NetcodeHub.Packages.Components.DataGrid
+@using NetcodeHub.Packages.Components.Toast
+@using System.Security.Claims
+@using MudBlazor
+
+@inject ToastService toastService
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Admin")]
+
+@* <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card border-1 shadow-lg">
+            
+            
+        </div>
+    </div>
+</div> *@
+
+<MudPaper Style="margin: 8px">
+    <div class="card-header fw-bold text-info fs-2">Available Users</div>
+    <div class="card-body">
+        @if (Users != null)
+        {
+            <MudTable Items="Users" Dense="true" Hover="true" Elevation="3">
+                <HeaderContent>
+                    <MudTh>USER NAME</MudTh>
+                    <MudTh>USER EMAIL</MudTh>
+                    <MudTh>CHANGE ROLE</MudTh>
+                    <MudTh>ACTION</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="USER NAME">@context.Name</MudTd>
+                    <MudTd DataLabel="USER EMAIL">@context.Email</MudTd>
+                    <MudTd DataLabel="CHANGE ROLE">
+                        @if (DefaultRoles != null)
+                        {
+                            <MudSelect T="string"
+                                       Value="@context.RoleName"
+                                       ValueChanged="@(newVal => HandleSelectionChangeForUser(context, newVal))">
+                                @foreach (var role in DefaultRoles)
+                                {
+                                    <MudSelectItem Value="@role.Name">@role.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+                        }
+                        else
+                        {
+                            <em>Loading roles...</em>
+                        }
+                    </MudTd>
+                    <MudTd DataLabel="ACTION">
+                        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Color="MudBlazor.Color.Error" OnClick="@(() => DeleteUser(context))" />
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
+        else
+        {
+            <em class="text-success text-center fw-bold shadow-lg border-1">Loading data.....</em>
+        }
+
+    </div>
+</MudPaper>
+
+<Toast @ref="toastService.ToastComponent" IconClass="bi bi-check" Persist="true" Duration="2000"/>
+
+@code {
+    [CascadingParameter] public Task<AuthenticationState>? AuthState { get; set; }
+    private IEnumerable<GetUsersWithRolesResponseDTO>? Users { get; set; }
+    private IEnumerable<GetRoleDTO>? DefaultRoles { get; set; }
+    ClaimsPrincipal? User;
+
+    private async Task GetUsersWithRoles()
+    {
+        var data = (await accountService.GetUsersWithRolesAsync()).ToList();
+        data.Remove(data.FirstOrDefault(x => x.Email == User!.Identity!.Name)!);
+        Users = data;
+    }
+
+    private async Task GetDefaultRoles() => DefaultRoles = await accountService.GetRolesAsync();
+    private async Task GetAdminInfo() => User = (await AuthState!).User;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await GetAdminInfo();
+            await GetUsersWithRoles();
+            await GetDefaultRoles();
+        }
+        catch{ }
+    }
+
+    private async Task HandleSelectionChangeForUser(GetUsersWithRolesResponseDTO user, string newRoleName)
+    {
+        // Only update if the role is actually different
+        if (user.RoleName != newRoleName)
+        {
+            var result = await accountService.ChangeUserRoleAsync(new ChangeUserRoleRequestDTO(user.Email, newRoleName));
+            if (result.Flag)
+            {
+                // toastService.ShowSuccessToast("Info!", result.Message);
+                Snackbar.Add(result.Message, Severity.Success);
+                // Optionally update the UI to reflect the new role
+                user.RoleName = newRoleName;
+            }
+            else
+            {
+                // toastService.ShowErrorToast("Alert!", result.Message);
+                Snackbar.Add(result.Message, Severity.Error);
+            }
+        }
+    }
+
+    // Delete function using the account service.
+    private async Task DeleteUser(GetUsersWithRolesResponseDTO user)
+    {
+        // Create the DeleteDTO with the user's email.
+        var deleteDto = new DeleteDTO { EmailAddress = user.Email };
+        var result = await accountService.DeleteAccountAsync(deleteDto);
+        if (result.Flag)
+        {
+            // Remove the user from the list and update the UI.
+            Users = Users.Where(u => u.Email != user.Email).ToList();
+            Snackbar.Add(result.Message, Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add(result.Message, Severity.Error);
+        }
+    }
+
+}

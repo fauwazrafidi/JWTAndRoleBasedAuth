@@ -1,0 +1,75 @@
+﻿@using Application.Extensions
+@using Microsoft.AspNetCore.Components.Authorization;
+@using MudBlazor;
+
+@inherits LayoutComponentBase
+
+@* <div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="content/home">
+            <div class="d-flex justify-content-around">
+                <span class="d-flex bi bi-car-content-front-fill fs-3" aria-hidden="true"></span>
+                <span class="d-flex">Vehicle-Hub</span>
+            </div>
+        </a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="content/home" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Records
+            </NavLink>
+        </div>
+
+        <AuthorizeView Roles="@Constant.Role.Admin">
+            <div class="nav-item px-3 text-light mt-3">
+                <span class="bi bi-person-fill-gear fs-4" aria-hidden="true"></span> Addministation 
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="administration/account/identity/add-user" Match="NavLinkMatch.All">
+                    <span class="bi bi-person-plus fs-5 icon-fix text-light" aria-hidden="true"></span> Add User
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="administration/account/identity/users" Match="NavLinkMatch.All">
+                    <span class="bi bi-list fs-5 icon-fix text-light" aria-hidden="true"></span> List Users
+                </NavLink>
+            </div>
+        </AuthorizeView>
+    </nav>
+</div> *@
+
+<!-- Only include the navigation links here -->
+<MudNavMenu>
+    <MudNavLink Href="content/home" Icon="Icons.Material.Filled.Home" Style="color:white;">
+        Home
+    </MudNavLink>
+
+    <AuthorizeView Roles="@Constant.Role.Admin">
+        <MudNavGroup Icon="Icons.Material.Filled.Person" Title="Administration" Style="color:white;">
+            <MudNavLink Href="administration/account/identity/add-user" Icon="Icons.Material.Filled.PersonAdd" Style="color:white;">
+                Add User
+            </MudNavLink>
+            <MudNavLink Href="administration/account/identity/users" Icon="Icons.Material.Filled.List" Style="color:white;">
+                List Users
+            </MudNavLink>
+        </MudNavGroup>
+    </AuthorizeView>
+</MudNavMenu>
+
+@* @code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+} *@

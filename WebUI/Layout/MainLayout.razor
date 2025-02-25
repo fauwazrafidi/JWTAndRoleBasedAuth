@@ -1,0 +1,85 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+@inherits LayoutComponentBase
+
+@* Required *@
+<MudThemeProvider />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+@* <MudLayout>
+    <MudAppBar Elevation="1" Color="Color.Primary">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Edge="Edge.Start" Color="Color.Inherit" OnClick="@ToggleNavMenu" />
+        <span>QRCode System</span>
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_drawerOpen" Variant="DrawerVariant.Responsive" ClipMode="DrawerClipMode.Always" Elevation="1">
+        <NavMenu />
+    </MudDrawer>
+</MudLayout> *@
+
+<MudLayout>
+    <MudAppBar Elevation="1" style="background-color: #0E1111">
+        <!-- Toggle the drawer -->
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Edge="Edge.Start" Color="Color.Inherit" OnClick="@ToggleNavMenu" />
+        <span>My Application</span>
+
+        <!-- Spacer pushes the following items to the right -->
+        <MudSpacer />
+
+        <!-- Authorization block -->
+        <AuthorizeView>
+            <Authorized>
+                <!-- Display the welcome message with the logged-in user's name -->
+                <MudText Class="mx-2" Style="color:white;">Welcome, @context.User.Identity.Name</MudText>
+                <!-- Logout link with custom classes -->
+                <a class="btn btn-link text-danger text-decoration-none fw-bold" href="account/identity/logout">Logout</a>
+            </Authorized>
+        </AuthorizeView>
+    </MudAppBar>
+
+    <!-- Single drawer wrapping the nav menu -->
+    <MudDrawer Style="background-color: #414a4c;" @bind-Open="_drawerOpen" Variant="DrawerVariant.Responsive" ClipMode="DrawerClipMode.Always" Elevation="1">
+        <NavMenu />
+    </MudDrawer>
+
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@* <div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <AuthorizeView>
+                <Authorized>
+                    Welcome, @context.User.Identity.Name
+                    <a class="btn btn-link text-danger text-decoration-none fw-bold" href="account/identity/logout">Logout</a>
+                </Authorized>
+            </AuthorizeView>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div> *@
+
+@code{
+    private bool _drawerOpen = true;
+
+    private void ToggleNavMenu()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}
