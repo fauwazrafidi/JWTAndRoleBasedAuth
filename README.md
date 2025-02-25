@@ -26,7 +26,7 @@ Follow these steps to set up the project locally:
    ```powershell
    Update-Database
 
-2.**Run the /setting API:**
+3. **Run the /setting API:**
    Execute the /setting API endpoint to create the admin role and the admin account with the following credentials:
    - Email: admin@admin.com
    - Password: Admin@123
