@@ -8,10 +8,7 @@ Authentication that uses JWT Token and Microsoft Identity
 <!-- Helps users quickly navigate through the README -->
 - [About](#about)
 - [Installation](#installation)
-- [Usage](#usage)
 - [License](#license)
-- [Contact](#contact)
-- [Acknowledgements](#acknowledgements)
 
 ## About
 JWTAndRoleBasedAuth is a project designed to implement authentication using JWT tokens in combination with Microsoft Identity.  
@@ -28,3 +25,9 @@ Follow these steps to set up the project locally:
    Open the Package Manager Console, set the default project to **Infrastructure**, and run:
    ```powershell
    Update-Database
+
+2.**Run the /setting API:**
+   Execute the /setting API endpoint to create the admin role and the admin account with the following credentials:
+   - Email: admin@admin.com
+   - Password: Admin@123
+   <!-- This API call initializes the necessary admin role and account for your project -->
