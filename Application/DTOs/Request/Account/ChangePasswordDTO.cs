@@ -7,14 +7,11 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.Request.Account
 {
-    public class LoginDTO
+    public class ChangePasswordDTO
     {
-        [EmailAddress, Required, DataType(DataType.EmailAddress)]
-        [RegularExpression("[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+", ErrorMessage = "Your EmailAddress is not valid!")]
-        [Display(Name = "EmailAddress Address")]
         public string EmailAddress { get; set; } = string.Empty;
-        [Required]
+        public string CurrentPassword { get; set; } = string.Empty;
         [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$", ErrorMessage = "Your password must be a mix of Alphanumeric and special characters")]
-        public string Password { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
     }
 }

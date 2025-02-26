@@ -295,5 +295,39 @@ namespace Infrastructure.Repos
                 return new GeneralResponse(true, "User deleted successfully");
             }
         }
+
+        public async Task<GeneralResponse> ChangePasswordAsync(ChangePasswordDTO model)
+        {
+            // Validate input
+            if (string.IsNullOrWhiteSpace(model.EmailAddress) || string.IsNullOrWhiteSpace(model.CurrentPassword) || string.IsNullOrWhiteSpace(model.NewPassword))
+            {
+                return new GeneralResponse(false, "All fields are required.");
+            }
+
+            // Find user by email
+            var user = await FindUserByEmailAsync(model.EmailAddress);
+            if (user == null)
+            {
+                return new GeneralResponse(false, "User not found.");
+            }
+
+            // Verify the current password
+            var passwordCheck = await userManager.CheckPasswordAsync(user, model.CurrentPassword);
+            if (!passwordCheck)
+            {
+                return new GeneralResponse(false, "Current password is incorrect.");
+            }
+
+            // Change the password
+            var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            string error = CheckResponse(result);
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                return new GeneralResponse(false, error);
+            }
+
+            return new GeneralResponse(true, "Password changed successfully.");
+        }
     }
 }

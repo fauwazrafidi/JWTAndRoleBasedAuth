@@ -20,6 +20,15 @@ namespace WebAPI.Controllers
             return Ok(await account.CreateAccountAsync(model));
         }
 
+        [HttpPost("identity/change-password")]
+        public async Task<ActionResult<GeneralResponse>> ChangePassword([FromBody] ChangePasswordDTO model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid request.");
+
+            return Ok(await account.ChangePasswordAsync(model));
+        }
+
         [HttpDelete("identity/delete")]
         public async Task<ActionResult<GeneralResponse>> DeleteAccount(DeleteDTO model)
         {

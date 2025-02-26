@@ -37,7 +37,7 @@ namespace Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("EmailAddress")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 

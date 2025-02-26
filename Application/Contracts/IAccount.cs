@@ -20,5 +20,6 @@ namespace Application.Contracts
         Task<IEnumerable<GetUsersWithRolesResponseDTO>> GetUsersWithRolesAsync();
         Task<GeneralResponse> ChangeUserRoleAsync(ChangeUserRoleRequestDTO model);
         Task<GeneralResponse> DeleteAccountAsync(DeleteDTO model);
+        Task<GeneralResponse> ChangePasswordAsync(ChangePasswordDTO model);
     }
 }

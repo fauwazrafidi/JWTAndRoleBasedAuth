@@ -203,5 +203,25 @@ namespace Application.Services
                 return new GeneralResponse(false, ex.Message);
             }
         }
+
+        public async Task<GeneralResponse> ChangePasswordAsync(ChangePasswordDTO model)
+        {
+            try
+            {
+                var privateClient = await httpClientService.GetPrivateClient();
+                var response = await privateClient.PostAsJsonAsync(Constant.ChangePasswordRoute, model);
+
+                string error = CheckResponseStatus(response);
+                if (!string.IsNullOrEmpty(error))
+                    return new GeneralResponse(false, error);
+
+                var result = await response.Content.ReadFromJsonAsync<GeneralResponse>();
+                return result!;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse(false, ex.Message);
+            }
+        }
     }
 }

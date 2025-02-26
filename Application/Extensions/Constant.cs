@@ -12,10 +12,10 @@ namespace Application.Extensions
         public const string HttpClientName = "WebUIClient";
         public const string HttpClientHeaderScheme = "Bearer";
         public const string AuthenticationType = "JwtAuth";
-
         // Account Route
         public const string RegisterRoute = "api/account/identity/create";
         public const string LoginRoute = "api/account/identity/login";
+        public const string ChangePasswordRoute = "api/account/identity/change-password";
         public const string DeleteRoute = "api/account/identity/delete";
         public const string RefreshTokenRoute = "api/account/identity/refresh-Token";
         public const string GetRolesRoute = "api/account/identity/role/list";
